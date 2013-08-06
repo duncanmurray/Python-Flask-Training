@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
-# working from the flask tutoriall located here http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
-
+""" working from the flask tutoriall located here 
+http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
+"""
 
 from flask import Flask, jsonify, abort
 
