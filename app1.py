@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
-""" working from the flask tutoriall located here 
+""" 
+working from the flask tutorial located here 
 http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flask
 """
 
