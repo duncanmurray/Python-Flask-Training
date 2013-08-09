@@ -27,9 +27,9 @@ def get_task(task_id):
     task = filter(lambda t: t['id'] == task_id, tasks)
     if len(task) == 0:
         abort(404)
-    #return jsonify( { 'task': task[0] } )
+    return jsonify( { 'task': task[0] } )
 
-# Add a task
+# Define add a task
 @app.route('/appname/api/v1.0/tasks', methods = ['POST'])
 def create_task():
     # Check is request is json and that title is supplied
@@ -48,8 +48,44 @@ def create_task():
     tasks.append(task)
     # Display created task back
     return jsonify( {'task': task } ),201
-            
 
+# define update task            
+@app.route('/appname/api/v1.0/tasks/<int:task_id>', methods = ['PUT'])
+def update_task(task_id):
+    task = filter(lambda t: t['id'] == task_id, tasks)
+    # abort if length is 0
+    if len(task) == 0:
+        abort(404)
+    # Abort if not json
+    if not request.json:
+        abort(400)
+    # Abort if title is not json and and unicode
+    if 'title' in request.json and type(request.json['title']) != unicode:
+        abort(400)
+    # Abort if description is not json and unicode
+    if 'description' in request.json and type(request.json['description']) is not unicode:
+        abort(400)
+    # Abort if done is not a boolian
+    if 'done' in request.json and type(request.json['done']) is not bool:
+        abort(400)
+    # Place into dictionary
+    task[0]['title'] = request.json.get('title', task[0]['title'])
+    task[0]['description'] = request.json.get('description', task[0]['description'])
+    task[0]['done'] = request.json.get('done', task[0]['done'])
+    # Return json
+    return jsonify( { 'task': task[0] } )
+
+# Define delete tasks 
+@app.route('/appname/api/v1.0/tasks/<int:task_id>', methods = ['DELETE'])
+def delete_task(task_id):
+    task = filter(lambda t: t['id'] == task_id, tasks)
+    # Quit if lenght is 0
+    if len(task) == 0:
+        abort(404)
+    # Remove task from dictionary
+    tasks.remove(task[0])
+    # Return json of task id and status
+    return jsonify( { 'taskid': task[0]['id'], 'deleted': True } )
 
 # Handle 404's and return JSON
 @app.errorhandler(404)
