@@ -6,7 +6,7 @@ http://blog.miguelgrinberg.com/post/designing-a-restful-api-with-python-and-flas
 """
 
 # Import modules
-from flask import Flask, jsonify, abort, make_response, request
+from flask import Flask, jsonify, abort, make_response, request, url_for
 
 app = Flask(__name__)
 
@@ -17,8 +17,9 @@ def index():
 
 # Define get tasks list function
 @app.route('/appname/api/v1.0/tasks', methods = ['GET'])
+#@auth.login_required
 def get_tasks():
-    return jsonify( { 'tasks': tasks } )
+    return jsonify( { 'tasks': map(make_public_task, tasks) } )
 
 # Define task get function
 @app.route('/appname/api/v1.0/tasks/<int:task_id>', methods = ['GET'])
@@ -92,6 +93,16 @@ def delete_task(task_id):
 def not_found(error):
     return make_response(jsonify( { 'error': 'Not Found' } ), 404)
 
+def make_public_task(task):
+    new_task = {}
+    for field in task:
+        if field == 'id':
+            new_task['uri'] = url_for('get_task', task_id = task['id'], _external = True)
+        else:
+            new_task[field] = task[field]
+    return new_task
+
+# Sample tasks
 tasks = [
     {
         'id': 1,
