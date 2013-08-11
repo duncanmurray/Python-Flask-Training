@@ -19,6 +19,7 @@ def index():
 @app.route('/appname/api/v1.0/tasks', methods = ['GET'])
 #@auth.login_required
 def get_tasks():
+    # Return task list as well as URL
     return jsonify( { 'tasks': map(make_public_task, tasks) } )
 
 # Define task get function
@@ -93,6 +94,7 @@ def delete_task(task_id):
 def not_found(error):
     return make_response(jsonify( { 'error': 'Not Found' } ), 404)
 
+# Function to return URL's
 def make_public_task(task):
     new_task = {}
     for field in task:
